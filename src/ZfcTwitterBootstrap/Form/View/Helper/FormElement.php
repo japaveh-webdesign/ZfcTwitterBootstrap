@@ -44,17 +44,18 @@ class FormElement extends ZendFormElement
     /**
      * @var string
      */
-    protected $groupWrapper = '<div class="control-group%s" id="control-group-%s">%s</div>';
+    protected $groupWrapper = '<div class="form-group%s" id="control-group-%s">%s</div>';
 
     /**
      * @var string
      */
-    protected $controlWrapper = '<div class="controls" id="controls-%s">%s%s%s</div>';
+    protected $controlWrapper = '<div class="col-lg-9" id="controls-%s">%s%s%s</div>';
 
     /**
      * Set Label Helper
      *
-     * @param  Zend\Form\View\Helper\FormLabel $labelHelper
+     * @param  \Zend\Form\View\Helper\FormLabel $labelHelper
+     *
      * @return self
      */
     public function setLabelHelper(FormLabel $labelHelper)
@@ -83,6 +84,7 @@ class FormElement extends ZendFormElement
      * Set EscapeHtml Helper
      *
      * @param  \Zend\View\Helper\EscapeHtml $escapeHelper
+     *
      * @return self
      */
     public function setEscapeHtmlHelper(EscapeHtml $escapeHelper)
@@ -111,6 +113,7 @@ class FormElement extends ZendFormElement
      * Set Element Helper
      *
      * @param  \Zend\Form\View\Helper\FormElement $elementHelper
+     *
      * @return self
      */
     public function setElementHelper(ZendFormElement $elementHelper)
@@ -139,14 +142,15 @@ class FormElement extends ZendFormElement
      * Set Element Error Helper
      *
      * @param  \Zend\Form\View\Helper\FormElementErrors $errorHelper
+     *
      * @return self
      */
     public function setElementErrorHelper(FormElementErrors $errorHelper)
     {
         $errorHelper->setView($this->getView());
-        
+
         $this->elementErrorHelper = $errorHelper;
-        
+
         return $this;
     }
 
@@ -168,6 +172,7 @@ class FormElement extends ZendFormElement
      * Set Description Helper
      *
      * @param FormDescription
+     *
      * @return self
      */
     public function setDescriptionHelper(FormDescription $descriptionHelper)
@@ -196,11 +201,12 @@ class FormElement extends ZendFormElement
      * Set Group Wrapper
      *
      * @param  string $groupWrapper
+     *
      * @return self
      */
     public function setGroupWrapper($groupWrapper)
     {
-        $this->groupWrapper = (string) $groupWrapper;
+        $this->groupWrapper = (string)$groupWrapper;
 
         return $this;
     }
@@ -218,12 +224,13 @@ class FormElement extends ZendFormElement
     /**
      * Set Control Wrapper
      *
-     * @param  string $controlWrapper;
+     * @param  string $controlWrapper ;
+     *
      * @return self
      */
     public function setControlWrapper($controlWrapper)
     {
-        $this->controlWrapper = (string) $controlWrapper;
+        $this->controlWrapper = (string)$controlWrapper;
 
         return $this;
     }
@@ -244,56 +251,58 @@ class FormElement extends ZendFormElement
      * @param  \Zend\Form\ElementInterface $element
      * @param  string                      $groupWrapper
      * @param  string                      $controlWrapper
+     *
      * @return string
      */
     public function render(ElementInterface $element, $groupWrapper = null, $controlWrapper = null)
     {
-        $labelHelper = $this->getLabelHelper();
-        $escapeHelper = $this->getEscapeHtmlHelper();
-        $elementHelper = $this->getElementHelper();
+        $labelHelper        = $this->getLabelHelper();
+        $escapeHelper       = $this->getEscapeHtmlHelper();
+        $elementHelper      = $this->getElementHelper();
         $elementErrorHelper = $this->getElementErrorHelper();
-        $descriptionHelper = $this->getDescriptionHelper();
-        $groupWrapper = $groupWrapper ?: $this->groupWrapper;
-        $controlWrapper = $controlWrapper ?: $this->controlWrapper;
-        $renderer = $elementHelper->getView();
+        $descriptionHelper  = $this->getDescriptionHelper();
+        $groupWrapper       = $groupWrapper ? : $this->groupWrapper;
+        $controlWrapper     = $controlWrapper ? : $this->controlWrapper;
+        $renderer           = $elementHelper->getView();
 
         $hiddenElementForCheckbox = '';
         if (method_exists($element, 'useHiddenElement') && $element->useHiddenElement()) {
             // If we have hidden input with checkbox's unchecked value, render that separately so it can be prepended later, and unset it in the element
-            $withHidden = $elementHelper->render($element);
-            $withoutHidden = $elementHelper->render($element->setUseHiddenElement(false));
+            $withHidden               = $elementHelper->render($element);
+            $withoutHidden            = $elementHelper->render($element->setUseHiddenElement(false));
             $hiddenElementForCheckbox = str_ireplace($withoutHidden, '', $withHidden);
         }
 
-        $id = $element->getAttribute('id') ?: $element->getAttribute('name');
+        $id = $element->getAttribute('id') ? : $element->getAttribute('name');
 
-        if (method_exists($renderer, 'plugin')) {
-            if ($element instanceof \Zend\Form\Element\Radio) {
-                $renderer->plugin('form_radio')->setLabelAttributes(array(
-                    'class' => 'radio',
-                ));
-            } elseif ($element instanceof \Zend\Form\Element\MultiCheckbox) {
-                $renderer->plugin('form_multi_checkbox')->setLabelAttributes(array(
-                    'class' => 'checkbox',
-                ));
-            }
+        if ($element instanceof \Zend\Form\Element\Radio) {
+            $element->setAttribute('class', 'radio');
+        } elseif ($element instanceof \Zend\Form\Element\MultiCheckbox) {
+            $element->setAttribute('class', 'checkbox');
+        } elseif (!$element instanceof \Zend\Form\Element\Hidden &&
+            (!$element instanceof \Zend\Form\Element\Button && !$element instanceof \Zend\Form\Element\Submit)
+        ) {
+            $element->setAttribute('class', 'form-control');
         }
 
         $controlLabel = '';
-        $label = $element->getLabel();
+        $label        = $element->getLabel();
         if (strlen($label) === 0) {
-            $label = $element->getOption('label') ?: $element->getAttribute('label');
+            $label = $element->getOption('label') ? : $element->getAttribute('label');
         }
 
         if ($label && !$element->getOption('skipLabel')) {
 
-            $controlLabel .= $labelHelper->openTag(array(
-                'class' => ($element->getOption('wrapCheckboxInLabel') ? 'checkbox' : 'control-label'),
-            ) + ($element->hasAttribute('id') ? array('for' => $id) : array()));
+            $controlLabel .= $labelHelper->openTag(
+                array(
+                    'class' => 'col-lg-3 ' . ($element->getOption('wrapCheckboxInLabel') ? 'checkbox' : 'control-label'),
+                ) + ($element->hasAttribute('id') ? array('for' => $id) : array())
+            );
 
             if (null !== ($translator = $labelHelper->getTranslator())) {
                 $label = $translator->translate(
-                    $label, $labelHelper->getTranslatorTextDomain()
+                    $label,
+                    $labelHelper->getTranslatorTextDomain()
                 );
             }
             if ($element->getOption('wrapCheckboxInLabel')) {
@@ -305,29 +314,43 @@ class FormElement extends ZendFormElement
                 $controlLabel .= $escapeHelper($label);
             }
             $controlLabel .= $labelHelper->closeTag();
-            if ($element instanceof \Zend\Form\Element\Radio
-                || $element instanceof \Zend\Form\Element\MultiCheckbox) {
-                $controlLabel = str_replace(array('<label', '</label>'), array('<div', '</div>'), $controlLabel);
-            }
         }
 
-        $controls = '';
-
         if ($element->getOption('wrapCheckboxInLabel')) {
-            $controls = $controlLabel;
+            $controls     = $controlLabel;
             $controlLabel = '';
         } else {
             $controls = $elementHelper->render($element);
         }
 
-        $html = $hiddenElementForCheckbox . $controlLabel . sprintf($controlWrapper,
-            $id,
-            $controls,
-            $descriptionHelper->render($element),
-            $elementErrorHelper->render($element)
-        );
+        if ($element instanceof \Zend\Form\Element\Radio) {
+            $controls = str_replace(
+                array('<label', '</label>'),
+                array('<div class="radio"><label', '</label></div>'),
+                $controls);
+        }
 
-        $addtClass = ($element->getMessages()) ? ' error' : '';
+        if ($element instanceof \Zend\Form\Element\MultiCheckbox) {
+            $controls = str_replace(
+                array('<label', '</label>'),
+                array('<div class="checkbox"><label', '</label></div>'),
+                $controls);
+        }
+
+
+        if ($element instanceof \Zend\Form\Element\Hidden || $element instanceof \Zend\Form\Element\Submit || $element instanceof \Zend\Form\Element\Button) {
+            return $controls . $elementErrorHelper->render($element);
+        } else {
+            $html = $hiddenElementForCheckbox . $controlLabel . sprintf(
+                    $controlWrapper,
+                    $id,
+                    $controls,
+                    $descriptionHelper->render($element),
+                    $elementErrorHelper->render($element)
+                );
+        }
+
+        $addtClass = ($element->getMessages()) ? ' has-error' : '';
 
         return sprintf($groupWrapper, $addtClass, $id, $html);
     }
@@ -338,6 +361,7 @@ class FormElement extends ZendFormElement
      * @param  \Zend\Form\ElementInterface $element
      * @param  string                      $groupWrapper
      * @param  string                      $controlWrapper
+     *
      * @return string|self
      */
     public function __invoke(ElementInterface $element = null, $groupWrapper = null, $controlWrapper = null)
