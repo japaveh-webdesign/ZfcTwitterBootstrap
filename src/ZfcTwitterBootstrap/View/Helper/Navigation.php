@@ -27,6 +27,7 @@ class Navigation extends ZendNavigation
     protected $defaultPluginManagerHelpers = array(
         'ztbbreadcrumbs' => 'ZfcTwitterBootstrap\View\Helper\Navigation\Breadcrumbs',
         'ztbmenu'        => 'ZfcTwitterBootstrap\View\Helper\Navigation\Menu',
+        'ztbnosmenu'        => 'ZfcTwitterBootstrap\View\Helper\Navigation\NosMenu',
     );
 
     /**
