@@ -35,6 +35,8 @@ class Menu extends ZendMenu
      * @param  int|null          $maxDepth           maximum depth
      * @param  bool              $escapeLabels       Whether or not to escape the labels
      * @param  bool              $addClassToListItem Whether or not page class applied to <li> element
+     * @param  string            $liActiveClass      Active class of LI element
+     *
      * @return string
      */
     protected function renderDeepestMenu(
@@ -44,8 +46,10 @@ class Menu extends ZendMenu
         $minDepth,
         $maxDepth,
         $escapeLabels,
-        $addClassToListItem
-    ) {
+        $addClassToListItem,
+        $liActiveClass
+    )
+    {
         if (!$active = $this->findActive($container, $minDepth - 1, $maxDepth)) {
             return '';
         }
@@ -58,13 +62,13 @@ class Menu extends ZendMenu
         } elseif (!$active['page']->hasPages()) {
             // found pages has no children; render siblings
             $active['page'] = $active['page']->getParent();
-        } elseif (is_int($maxDepth) && $active['depth'] +1 > $maxDepth) {
+        } elseif (is_int($maxDepth) && $active['depth'] + 1 > $maxDepth) {
             // children are below max depth; render siblings
             $active['page'] = $active['page']->getParent();
         }
 
         $ulClass = $ulClass ? ' class="' . $ulClass . '"' : '';
-        $html = $indent . '<ul' . $ulClass . '>' . self::EOL;
+        $html    = $indent . '<ul' . $ulClass . '>' . self::EOL;
 
         foreach ($active['page'] as $subPage) {
             if (!$this->accept($subPage)) {
@@ -105,6 +109,8 @@ class Menu extends ZendMenu
      * @param  bool              $onlyActive         render only active branch?
      * @param  bool              $escapeLabels       Whether or not to escape the labels
      * @param  bool              $addClassToListItem Whether or not page class applied to <li> element
+     * @param  string            $liActiveClass      Active class of LI element
+     *
      * @return string
      */
     protected function renderNormalMenu(
@@ -115,8 +121,10 @@ class Menu extends ZendMenu
         $maxDepth,
         $onlyActive,
         $escapeLabels,
-        $addClassToListItem
-    ) {
+        $addClassToListItem,
+        $liActiveClass
+    )
+    {
         $html = '';
 
         // find deepest active
@@ -138,7 +146,7 @@ class Menu extends ZendMenu
         // iterate container
         $prevDepth = -1;
         foreach ($iterator as $page) {
-            $depth = $iterator->getDepth();
+            $depth    = $iterator->getDepth();
             $isActive = $page->isActive(true);
             if ($depth < $minDepth || !$this->accept($page)) {
                 // page is below minDepth or not accepted by acl/visibility
@@ -153,7 +161,8 @@ class Menu extends ZendMenu
                     } elseif ($foundPage->getParent()->hasPage($page)) {
                         // page is a sibling of the active page...
                         if (!$foundPage->hasPages() ||
-                            is_int($maxDepth) && $foundDepth + 1 > $maxDepth) {
+                            is_int($maxDepth) && $foundDepth + 1 > $maxDepth
+                        ) {
                             // accept if active page has no children, or the
                             // children are too deep to be rendered
                             $accept = true;
@@ -172,7 +181,7 @@ class Menu extends ZendMenu
 
             if ($depth > $prevDepth) {
                 // start new ul tag
-                if ($ulClass && $depth ==  0) {
+                if ($ulClass && $depth == 0) {
                     $ulClass = ' class="' . $ulClass . '"';
                 } elseif ($page->getParent()) {
                     $ulClass = ' class="dropdown-menu"';
@@ -202,7 +211,7 @@ class Menu extends ZendMenu
             }
             // Is page parent?
             if ($page->hasChildren() && (!isset($maxDepth) || $depth < $maxDepth)) {
-                $liClasses[] = 'dropdown';
+                $liClasses[]      = 'dropdown';
                 $page->isDropdown = true;
             }
             // Add CSS class from page to <li>
@@ -220,8 +229,8 @@ class Menu extends ZendMenu
 
         if ($html) {
             // done iterating container; close open ul/li tags
-            for ($i = $prevDepth+1; $i > 0; $i--) {
-                $myIndent = $indent . str_repeat('        ', $i-1);
+            for ($i = $prevDepth + 1; $i > 0; $i--) {
+                $myIndent = $indent . str_repeat('        ', $i - 1);
                 $html .= $myIndent . '    </li>' . self::EOL
                     . $myIndent . '</ul>' . self::EOL;
             }
@@ -240,6 +249,7 @@ class Menu extends ZendMenu
      * @param  AbstractPage $page               page to generate HTML for
      * @param  bool         $escapeLabel        Whether or not to escape the label
      * @param  bool         $addClassToListItem Whether or not to add the page class to the list item
+     *
      * @return string
      */
     public function htmlify(AbstractPage $page, $escapeLabel = true, $addClassToListItem = false)
@@ -260,12 +270,12 @@ class Menu extends ZendMenu
         }
 
         // get attribs for element
-        $element = 'a';
+        $element  = 'a';
         $extended = '';
-        $attribs = array(
-            'id'     => $page->getId(),
-            'title'  => $title,
-            'href'   => '#',
+        $attribs  = array(
+            'id'    => $page->getId(),
+            'title' => $title,
+            'href'  => '#',
         );
 
         $class = array();
@@ -274,8 +284,8 @@ class Menu extends ZendMenu
         }
         if ($page->isDropdown) {
             $attribs['data-toggle'] = 'dropdown';
-            $class[] = 'dropdown-toggle';
-            $extended = '<b class="caret"></b>';
+            $class[]                = 'dropdown-toggle';
+            $extended               = '<b class="caret"></b>';
         }
         if (count($class) > 0) {
             $attribs['class'] = implode(' ', $class);
@@ -284,7 +294,7 @@ class Menu extends ZendMenu
         // does page have a href?
         $href = $page->getHref();
         if ($href) {
-            $attribs['href'] = $href;
+            $attribs['href']   = $href;
             $attribs['target'] = $page->getTarget();
         }
 
