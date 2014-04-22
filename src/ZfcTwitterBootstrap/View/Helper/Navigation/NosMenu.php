@@ -38,6 +38,7 @@ class NosMenu extends ZendMenu
      * @param  bool              $onlyActive         render only active branch?
      * @param  bool              $escapeLabels       Whether or not to escape the labels
      * @param  bool              $addClassToListItem Whether or not page class applied to <li> element
+     * @param  string            $liActiveClass      Active class of LI element
      *
      * @return string
      */
@@ -49,7 +50,8 @@ class NosMenu extends ZendMenu
         $maxDepth,
         $onlyActive,
         $escapeLabels,
-        $addClassToListItem
+        $addClassToListItem,
+        $liActiveClass
     )
     {
 
