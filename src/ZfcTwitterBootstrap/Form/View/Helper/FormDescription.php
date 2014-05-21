@@ -76,6 +76,7 @@ class FormDescription extends AbstractHelper
      * @param  string                      $blockWrapper
      * @param  string                      $inlineWrapper
      * @return string
+     * @throws \InvalidArgumentException
      */
     public function render(ElementInterface $element, $blockWrapper = null, $inlineWrapper = null)
     {
@@ -84,9 +85,17 @@ class FormDescription extends AbstractHelper
 
         $html = '';
         if ($inline = $element->getOption('help-inline')) {
-            $html .= sprintf($inlineWrapper, $inline);
+
+            throw new \InvalidArgumentException("Inline help is not supported anymore");
         }
         if ($block = $element->getOption('help-block')) {
+
+            if (null !== ($translator = $this->getTranslator())) {
+                $block = $translator->translate(
+                    $block, $this->getTranslatorTextDomain()
+                );
+            }
+
             $html .= sprintf($blockWrapper, $block);
         }
 
