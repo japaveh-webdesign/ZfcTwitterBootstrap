@@ -12,11 +12,10 @@ use Zend\Form\View\Helper\AbstractHelper;
  */
 class Alert extends AbstractHelper
 {
-
     /**
      * @var string
      */
-     protected $format = <<<FORMAT
+    protected $format = <<<FORMAT
 <div class="alert %s"><button type="button" class="close" data-dismiss="alert">&times;</button>%s</div>
 FORMAT;
 
@@ -25,6 +24,7 @@ FORMAT;
      *
      * @param  string $alert
      * @param  bool   $isBlock
+     *
      * @return string
      */
     public function info($alert, $isBlock = false)
@@ -33,15 +33,16 @@ FORMAT;
     }
 
     /**
-     * Display an Error Alert
+     * Display an Danger Alert
      *
      * @param  string $alert
      * @param  bool   $isBlock
+     *
      * @return string
      */
-    public function error($alert, $isBlock = false)
+    public function danger($alert, $isBlock = false)
     {
-        return $this->render($alert, $isBlock, 'alert-error');
+        return $this->render($alert, $isBlock, 'alert-danger');
     }
 
     /**
@@ -49,6 +50,7 @@ FORMAT;
      *
      * @param  string $alert
      * @param  bool   $isBlock
+     *
      * @return string
      */
     public function success($alert, $isBlock = false)
@@ -61,11 +63,12 @@ FORMAT;
      *
      * @param  string $alert
      * @param  bool   $isBlock
+     *
      * @return string
      */
     public function warning($alert, $isBlock = false)
     {
-        return $this->render($alert, $isBlock);
+        return $this->render($alert, $isBlock, 'alert-warning');
     }
 
     /**
@@ -74,6 +77,7 @@ FORMAT;
      * @param  string $alert
      * @param  bool   $isBlock
      * @param  string $class
+     *
      * @return string
      */
     public function render($alert, $isBlock = false, $class = '')
@@ -89,9 +93,10 @@ FORMAT;
     /**
      * Invoke Alert
      *
-     * @param  string      $alert
-     * @param  bool        $isBlock
-     * @param  string      $class
+     * @param  string $alert
+     * @param  bool   $isBlock
+     * @param  string $class
+     *
      * @return string|self
      */
     public function __invoke($alert = null, $isBlock = false, $class = '')
