@@ -276,9 +276,9 @@ class FormElement extends ZendFormElement
         $id = $element->getAttribute('id') ? : $element->getAttribute('name');
 
         if ($element instanceof \Zend\Form\Element\Radio) {
-            $element->setAttribute('class', 'radio');
+            //$element->setAttribute('class', 'radio');
         } elseif ($element instanceof \Zend\Form\Element\MultiCheckbox) {
-            $element->setAttribute('class', 'checkbox');
+            //$element->setAttribute('class', 'checkbox');
         } elseif (!$element instanceof \Zend\Form\Element\Hidden &&
             (!$element instanceof \Zend\Form\Element\Button && !$element instanceof \Zend\Form\Element\Submit)
         ) {
@@ -328,9 +328,7 @@ class FormElement extends ZendFormElement
                 array('<label', '</label>'),
                 array('<div class="radio"><label', '</label></div>'),
                 $controls);
-        }
-
-        if ($element instanceof \Zend\Form\Element\MultiCheckbox) {
+        } elseif ($element instanceof \Zend\Form\Element\MultiCheckbox) {
             $controls = str_replace(
                 array('<label', '</label>'),
                 array('<div class="checkbox"><label', '</label></div>'),
