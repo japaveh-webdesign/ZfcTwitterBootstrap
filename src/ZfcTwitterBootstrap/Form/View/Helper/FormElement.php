@@ -7,8 +7,8 @@ namespace ZfcTwitterBootstrap\Form\View\Helper;
 
 use Zend\Form\ElementInterface;
 use Zend\Form\View\Helper\FormElement as ZendFormElement;
-use Zend\Form\View\Helper\FormLabel;
 use Zend\Form\View\Helper\FormElementErrors;
+use Zend\Form\View\Helper\FormLabel;
 use Zend\View\Helper\EscapeHtml;
 
 /**
@@ -73,7 +73,7 @@ class FormElement extends ZendFormElement
      */
     public function getLabelHelper()
     {
-        if (!$this->labelHelper) {
+        if ( ! $this->labelHelper) {
             $this->setLabelHelper($this->view->plugin('formlabel'));
         }
 
@@ -102,7 +102,7 @@ class FormElement extends ZendFormElement
      */
     public function getEscapeHtmlHelper()
     {
-        if (!$this->escapeHelper) {
+        if ( ! $this->escapeHelper) {
             $this->setEscapeHtmlHelper($this->view->plugin('escapehtml'));
         }
 
@@ -131,7 +131,7 @@ class FormElement extends ZendFormElement
      */
     public function getElementHelper()
     {
-        if (!$this->elementHelper) {
+        if ( ! $this->elementHelper) {
             $this->setElementHelper($this->view->plugin('formelement'));
         }
 
@@ -161,7 +161,7 @@ class FormElement extends ZendFormElement
      */
     public function getElementErrorHelper()
     {
-        if (!$this->elementErrorHelper) {
+        if ( ! $this->elementErrorHelper) {
             $this->setElementErrorHelper($this->view->plugin('formelementerrors'));
         }
 
@@ -190,7 +190,7 @@ class FormElement extends ZendFormElement
      */
     public function getDescriptionHelper()
     {
-        if (!$this->descriptionHelper) {
+        if ( ! $this->descriptionHelper) {
             $this->setDescriptionHelper($this->view->plugin('ztbformdescription'));
         }
 
@@ -206,7 +206,7 @@ class FormElement extends ZendFormElement
      */
     public function setGroupWrapper($groupWrapper)
     {
-        $this->groupWrapper = (string)$groupWrapper;
+        $this->groupWrapper = (string) $groupWrapper;
 
         return $this;
     }
@@ -230,7 +230,7 @@ class FormElement extends ZendFormElement
      */
     public function setControlWrapper($controlWrapper)
     {
-        $this->controlWrapper = (string)$controlWrapper;
+        $this->controlWrapper = (string) $controlWrapper;
 
         return $this;
     }
@@ -249,8 +249,8 @@ class FormElement extends ZendFormElement
      * Render
      *
      * @param  \Zend\Form\ElementInterface $element
-     * @param  string                      $groupWrapper
-     * @param  string                      $controlWrapper
+     * @param  string $groupWrapper
+     * @param  string $controlWrapper
      *
      * @return string
      */
@@ -261,8 +261,8 @@ class FormElement extends ZendFormElement
         $elementHelper      = $this->getElementHelper();
         $elementErrorHelper = $this->getElementErrorHelper();
         $descriptionHelper  = $this->getDescriptionHelper();
-        $groupWrapper       = $groupWrapper ? : $this->groupWrapper;
-        $controlWrapper     = $controlWrapper ? : $this->controlWrapper;
+        $groupWrapper       = $groupWrapper ?: $this->groupWrapper;
+        $controlWrapper     = $controlWrapper ?: $this->controlWrapper;
         $renderer           = $elementHelper->getView();
 
         $hiddenElementForCheckbox = '';
@@ -273,14 +273,14 @@ class FormElement extends ZendFormElement
             $hiddenElementForCheckbox = str_ireplace($withoutHidden, '', $withHidden);
         }
 
-        $id = $element->getAttribute('id') ? : $element->getAttribute('name');
+        $id = $element->getAttribute('id') ?: $element->getAttribute('name');
 
         if ($element instanceof \Zend\Form\Element\Radio) {
             //$element->setAttribute('class', 'radio');
         } elseif ($element instanceof \Zend\Form\Element\MultiCheckbox) {
             //$element->setAttribute('class', 'checkbox');
-        } elseif (!$element instanceof \Zend\Form\Element\Hidden &&
-            (!$element instanceof \Zend\Form\Element\Button && !$element instanceof \Zend\Form\Element\Submit)
+        } elseif ( ! $element instanceof \Zend\Form\Element\Hidden &&
+                   ( ! $element instanceof \Zend\Form\Element\Button && ! $element instanceof \Zend\Form\Element\Submit)
         ) {
             $element->setAttribute('class', 'form-control');
         }
@@ -288,15 +288,15 @@ class FormElement extends ZendFormElement
         $controlLabel = '';
         $label        = $element->getLabel();
         if (strlen($label) === 0) {
-            $label = $element->getOption('label') ? : $element->getAttribute('label');
+            $label = $element->getOption('label') ?: $element->getAttribute('label');
         }
 
-        if ($label && !$element->getOption('skipLabel')) {
+        if ($label && ! $element->getOption('skipLabel')) {
 
             $controlLabel .= $labelHelper->openTag(
-                array(
+                [
                     'class' => 'col-lg-3 ' . ($element->getOption('wrapCheckboxInLabel') ? 'checkbox' : 'control-label'),
-                ) + ($element->hasAttribute('id') ? array('for' => $id) : array())
+                ] + ($element->hasAttribute('id') ? ['for' => $id] : [])
             );
 
             if (null !== ($translator = $labelHelper->getTranslator())) {
@@ -325,13 +325,13 @@ class FormElement extends ZendFormElement
 
         if ($element instanceof \Zend\Form\Element\Radio) {
             $controls = str_replace(
-                array('<label', '</label>'),
-                array('<div class="radio"><label', '</label></div>'),
+                ['<label', '</label>'],
+                ['<div class="radio"><label', '</label></div>'],
                 $controls);
         } elseif ($element instanceof \Zend\Form\Element\MultiCheckbox) {
             $controls = str_replace(
-                array('<label', '</label>'),
-                array('<div class="checkbox"><label', '</label></div>'),
+                ['<label', '</label>'],
+                ['<div class="checkbox"><label', '</label></div>'],
                 $controls);
         }
 
@@ -350,6 +350,10 @@ class FormElement extends ZendFormElement
 
         $addtClass = ($element->getMessages()) ? ' has-error' : '';
 
+        if ($element->hasAttribute('required')) {
+            $addtClass .= $addtClass . ' required';
+        }
+
         return sprintf($groupWrapper, $addtClass, $id, $html);
     }
 
@@ -357,8 +361,8 @@ class FormElement extends ZendFormElement
      * Magical Invoke
      *
      * @param  \Zend\Form\ElementInterface $element
-     * @param  string                      $groupWrapper
-     * @param  string                      $controlWrapper
+     * @param  string $groupWrapper
+     * @param  string $controlWrapper
      *
      * @return string|self
      */
