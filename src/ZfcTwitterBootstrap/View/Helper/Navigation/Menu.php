@@ -145,7 +145,9 @@ class Menu extends ZendMenu
 
         // iterate container
         $prevDepth = -1;
+
         foreach ($iterator as $page) {
+
             $depth    = $iterator->getDepth();
             $isActive = $page->isActive(true);
             if ($depth < $minDepth || !$this->accept($page)) {
@@ -210,7 +212,9 @@ class Menu extends ZendMenu
                 $liClasses[] = 'active';
             }
             // Is page parent?
+
             if ($page->hasChildren() && (!isset($maxDepth) || $depth < $maxDepth)) {
+
                 $liClasses[]      = 'dropdown';
                 $page->isDropdown = true;
             }
@@ -282,6 +286,7 @@ class Menu extends ZendMenu
         if ($addClassToListItem === false) {
             $class[] = $page->getClass();
         }
+        
         if ($page->isDropdown) {
             $attribs['data-toggle'] = 'dropdown';
             $class[]                = 'dropdown-toggle';

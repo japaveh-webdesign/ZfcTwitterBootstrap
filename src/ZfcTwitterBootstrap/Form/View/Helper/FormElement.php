@@ -348,6 +348,8 @@ class FormElement extends ZendFormElement
                 );
         }
 
+
+
         $addtClass = ($element->getMessages()) ? ' has-error' : '';
 
         return sprintf($groupWrapper, $addtClass, $id, $html);
