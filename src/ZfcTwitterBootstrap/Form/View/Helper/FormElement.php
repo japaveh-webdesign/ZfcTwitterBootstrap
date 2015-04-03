@@ -49,7 +49,7 @@ class FormElement extends ZendFormElement
     /**
      * @var string
      */
-    protected $controlWrapper = '<div class="col-lg-9" id="controls-%s">%s%s%s</div>';
+    protected $controlWrapper = '<div class="col-lg-9">%s%s%s</div>';
 
     /**
      * Set Label Helper
@@ -275,15 +275,29 @@ class FormElement extends ZendFormElement
 
         $id = $element->getAttribute('id') ?: $element->getAttribute('name');
 
-        if ($element instanceof \Zend\Form\Element\Radio) {
-            //$element->setAttribute('class', 'radio');
-        } elseif ($element instanceof \Zend\Form\Element\MultiCheckbox) {
-            //$element->setAttribute('class', 'checkbox');
-        } elseif ( ! $element instanceof \Zend\Form\Element\Hidden &&
-                   ( ! $element instanceof \Zend\Form\Element\Button && ! $element instanceof \Zend\Form\Element\Submit)
-        ) {
-            $element->setAttribute('class', 'form-control');
+        /**
+         * Dedicated control-wrapper for inline forms
+         */
+        if ($element->getOption('inline')) {
+            $controlWrapper = '%s%s%s';
         }
+
+        switch (true) {
+            case $element instanceof \Zend\Form\Element\Radio:
+            case $element instanceof \Zend\Form\Element\Checkbox:
+                if ($element->getOption('wrapCheckboxInLabel')) {
+                    $controlWrapper = '<div class="checkbox">%s%s%s</div>';
+                }
+                break;
+            case $element instanceof \Zend\Form\Element\Hidden:
+            case $element instanceof \Zend\Form\Element\Button:
+            case $element instanceof \Zend\Form\Element\Submit:
+                break;
+            default:
+                $element->setAttribute('class', 'form-control');
+                break;
+        }
+
 
         $controlLabel = '';
         $label        = $element->getLabel();
@@ -295,7 +309,8 @@ class FormElement extends ZendFormElement
 
             $controlLabel .= $labelHelper->openTag(
                 [
-                    'class' => 'col-lg-3 ' . ($element->getOption('wrapCheckboxInLabel') ? 'checkbox' : 'control-label'),
+                    'class' => (! $element->getOption('inline') ? 'col-lg-3 ' : '') .
+                        ($element->getOption('wrapCheckboxInLabel') ? '' : 'control-label'),
                 ] + ($element->hasAttribute('id') ? ['for' => $id] : [])
             );
 
@@ -341,13 +356,11 @@ class FormElement extends ZendFormElement
         } else {
             $html = $hiddenElementForCheckbox . $controlLabel . sprintf(
                     $controlWrapper,
-                    $id,
                     $controls,
                     $descriptionHelper->render($element),
                     $elementErrorHelper->render($element)
                 );
         }
-
 
 
         $addtClass = ($element->getMessages()) ? ' has-error' : '';
