@@ -6,11 +6,12 @@
 namespace ZfcTwitterBootstrap\View\Helper\Navigation;
 
 use RecursiveIteratorIterator;
-use Zend\View\Helper\Navigation\Menu as ZendMenu;
 use Zend\Navigation\AbstractContainer;
 use Zend\Navigation\Page\AbstractPage;
+use Zend\Navigation\Page\Mvc;
 use Zend\View;
 use Zend\View\Exception;
+use Zend\View\Helper\Navigation\Menu as ZendMenu;
 
 /**
  * Helper for rendering menus from navigation containers
@@ -28,14 +29,14 @@ class Menu extends ZendMenu
      * Renders the deepest active menu within [$minDepth, $maxDepth], (called
      * from {@link renderMenu()})
      *
-     * @param  AbstractContainer $container          container to render
-     * @param  string            $ulClass            CSS class for first UL
-     * @param  string            $indent             initial indentation
-     * @param  int|null          $minDepth           minimum depth
-     * @param  int|null          $maxDepth           maximum depth
-     * @param  bool              $escapeLabels       Whether or not to escape the labels
-     * @param  bool              $addClassToListItem Whether or not page class applied to <li> element
-     * @param  string            $liActiveClass      Active class of LI element
+     * @param  AbstractContainer $container container to render
+     * @param  string $ulClass CSS class for first UL
+     * @param  string $indent initial indentation
+     * @param  int|null $minDepth minimum depth
+     * @param  int|null $maxDepth maximum depth
+     * @param  bool $escapeLabels Whether or not to escape the labels
+     * @param  bool $addClassToListItem Whether or not page class applied to <li> element
+     * @param  string $liActiveClass Active class of LI element
      *
      * @return string
      */
@@ -48,8 +49,7 @@ class Menu extends ZendMenu
         $escapeLabels,
         $addClassToListItem,
         $liActiveClass
-    )
-    {
+    ) {
         if (!$active = $this->findActive($container, $minDepth - 1, $maxDepth)) {
             return '';
         }
@@ -68,7 +68,7 @@ class Menu extends ZendMenu
         }
 
         $ulClass = $ulClass ? ' class="' . $ulClass . '"' : '';
-        $html    = $indent . '<ul' . $ulClass . '>' . self::EOL;
+        $html = $indent . '<ul' . $ulClass . '>' . self::EOL;
 
         foreach ($active['page'] as $subPage) {
             if (!$this->accept($subPage)) {
@@ -76,7 +76,7 @@ class Menu extends ZendMenu
             }
 
             // render li tag and page
-            $liClasses = array();
+            $liClasses = [];
             // Is page active?
             if ($subPage->isActive(true)) {
                 $liClasses[] = 'active';
@@ -101,15 +101,15 @@ class Menu extends ZendMenu
     /**
      * Renders a normal menu (called from {@link renderMenu()})
      *
-     * @param  AbstractContainer $container          container to render
-     * @param  string            $ulClass            CSS class for first UL
-     * @param  string            $indent             initial indentation
-     * @param  int|null          $minDepth           minimum depth
-     * @param  int|null          $maxDepth           maximum depth
-     * @param  bool              $onlyActive         render only active branch?
-     * @param  bool              $escapeLabels       Whether or not to escape the labels
-     * @param  bool              $addClassToListItem Whether or not page class applied to <li> element
-     * @param  string            $liActiveClass      Active class of LI element
+     * @param  AbstractContainer $container container to render
+     * @param  string $ulClass CSS class for first UL
+     * @param  string $indent initial indentation
+     * @param  int|null $minDepth minimum depth
+     * @param  int|null $maxDepth maximum depth
+     * @param  bool $onlyActive render only active branch?
+     * @param  bool $escapeLabels Whether or not to escape the labels
+     * @param  bool $addClassToListItem Whether or not page class applied to <li> element
+     * @param  string $liActiveClass Active class of LI element
      *
      * @return string
      */
@@ -123,14 +123,13 @@ class Menu extends ZendMenu
         $escapeLabels,
         $addClassToListItem,
         $liActiveClass
-    )
-    {
+    ) {
         $html = '';
 
         // find deepest active
         $found = $this->findActive($container, $minDepth, $maxDepth);
         if ($found) {
-            $foundPage  = $found['page'];
+            $foundPage = $found['page'];
             $foundDepth = $found['depth'];
         } else {
             $foundPage = null;
@@ -146,9 +145,12 @@ class Menu extends ZendMenu
         // iterate container
         $prevDepth = -1;
 
+        /**
+         * @var $page Mvc
+         */
         foreach ($iterator as $page) {
 
-            $depth    = $iterator->getDepth();
+            $depth = $iterator->getDepth();
             $isActive = $page->isActive(true);
             if ($depth < $minDepth || !$this->accept($page)) {
                 // page is below minDepth or not accepted by acl/visibility
@@ -206,16 +208,14 @@ class Menu extends ZendMenu
             }
 
             // render li tag and page
-            $liClasses = array();
+            $liClasses = [];
             // Is page active?
             if ($isActive) {
                 $liClasses[] = 'active';
             }
             // Is page parent?
-
-            if ($page->hasChildren() && (!isset($maxDepth) || $depth < $maxDepth)) {
-
-                $liClasses[]      = 'dropdown';
+            if ($page->hasPages() && (!isset($maxDepth) || $depth < $maxDepth)) {
+                $liClasses[] = 'dropdown';
                 $page->isDropdown = true;
             }
             // Add CSS class from page to <li>
@@ -250,9 +250,9 @@ class Menu extends ZendMenu
      *
      * Overrides {@link AbstractHelper::htmlify()}.
      *
-     * @param  AbstractPage $page               page to generate HTML for
-     * @param  bool         $escapeLabel        Whether or not to escape the label
-     * @param  bool         $addClassToListItem Whether or not to add the page class to the list item
+     * @param  AbstractPage $page page to generate HTML for
+     * @param  bool $escapeLabel Whether or not to escape the label
+     * @param  bool $addClassToListItem Whether or not to add the page class to the list item
      *
      * @return string
      */
@@ -274,23 +274,23 @@ class Menu extends ZendMenu
         }
 
         // get attribs for element
-        $element  = 'a';
+        $element = 'a';
         $extended = '';
-        $attribs  = array(
+        $attribs = [
             'id'    => $page->getId(),
             'title' => $title,
             'href'  => '#',
-        );
+        ];
 
-        $class = array();
+        $class = [];
         if ($addClassToListItem === false) {
             $class[] = $page->getClass();
         }
-        
+
         if ($page->isDropdown) {
             $attribs['data-toggle'] = 'dropdown';
-            $class[]                = 'dropdown-toggle';
-            $extended               = '<b class="caret"></b>';
+            $class[] = 'dropdown-toggle';
+            $extended = '<b class="caret"></b>';
         }
         if (count($class) > 0) {
             $attribs['class'] = implode(' ', $class);
@@ -299,7 +299,7 @@ class Menu extends ZendMenu
         // does page have a href?
         $href = $page->getHref();
         if ($href) {
-            $attribs['href']   = $href;
+            $attribs['href'] = $href;
             $attribs['target'] = $page->getTarget();
         }
 
