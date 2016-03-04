@@ -6,6 +6,7 @@
 namespace ZfcTwitterBootstrap\View\Helper;
 
 use Zend\View\Helper\Navigation as ZendNavigation;
+use ZfcTwitterBootstrap\View\Helper;
 
 /**
  * Navigation
@@ -24,11 +25,12 @@ class Navigation extends ZendNavigation
      *
      * @var array
      */
-    protected $defaultPluginManagerHelpers = array(
-        'ztbbreadcrumbs' => 'ZfcTwitterBootstrap\View\Helper\Navigation\Breadcrumbs',
-        'ztbmenu'        => 'ZfcTwitterBootstrap\View\Helper\Navigation\Menu',
-        'ztbnosmenu'        => 'ZfcTwitterBootstrap\View\Helper\Navigation\NosMenu',
-    );
+    protected $defaultPluginManagerHelpers
+        = [
+            'ztbbreadcrumbs' => Helper\Navigation\Breadcrumbs::class,
+            'ztbmenu'        => Helper\Navigation\Menu::class,
+            'ztbnosmenu'     => Helper\Navigation\NosMenu::class,
+        ];
 
     /**
      * Retrieve plugin loader for navigation helpers
@@ -44,6 +46,7 @@ class Navigation extends ZendNavigation
         foreach ($this->defaultPluginManagerHelpers as $name => $invokableClass) {
             $pm->setInvokableClass($name, $invokableClass);
         }
+
         return $pm;
     }
 }

@@ -1,21 +1,33 @@
 <?php
+use ZfcTwitterBootstrap\Form\View;
+use ZfcTwitterBootstrap\Navigation;
+use ZfcTwitterBootstrap\View\Helper;
+
+
 return [
     'view_helpers' => [
+        'aliases'    => [
+            'ztbnavigation' => Helper\Navigation::class,
+        ],
+        'delegators' => [],
+        'factories'  => [
+            Helper\Navigation::class  => Navigation\View\NavigationHelperFactory::class,
+            'ztbviewhelpernavigation' => Navigation\View\NavigationHelperFactory::class,
+        ],
         'invokables' => [
-            'ztbalert'           => 'ZfcTwitterBootstrap\View\Helper\Alert',
-            'ztbbadge'           => 'ZfcTwitterBootstrap\View\Helper\Badge',
-            'ztbcloseicon'       => 'ZfcTwitterBootstrap\View\Helper\CloseIcon',
-            'ztbflashmessenger'  => 'ZfcTwitterBootstrap\View\Helper\FlashMessenger',
-            'ztbform'            => 'ZfcTwitterBootstrap\Form\View\Helper\Form',
-            'ztbformdescription' => 'ZfcTwitterBootstrap\Form\View\Helper\FormDescription',
-            'ztbformelement'     => 'ZfcTwitterBootstrap\Form\View\Helper\FormElement',
-            'ztbformrenderer'    => 'ZfcTwitterBootstrap\Form\View\Helper\Form',
-            'ztbicon'            => 'ZfcTwitterBootstrap\View\Helper\Icon',
-            'ztbimage'           => 'ZfcTwitterBootstrap\View\Helper\Image',
-            'ztbpanel'           => 'ZfcTwitterBootstrap\View\Helper\Panel',
-            'ztblabel'           => 'ZfcTwitterBootstrap\View\Helper\Label',
-            'ztbnavigation'      => 'ZfcTwitterBootstrap\View\Helper\Navigation',
-            'ztbwell'            => 'ZfcTwitterBootstrap\View\Helper\Well',
+            'ztbalert'           => Helper\Alert::class,
+            'ztbbadge'           => Helper\Badge::class,
+            'ztbcloseicon'       => Helper\CloseIcon::class,
+            'ztbflashmessenger'  => Helper\FlashMessenger::class,
+            'ztbform'            => View\Helper\Form::class,
+            'ztbformdescription' => View\Helper\FormDescription::class,
+            'ztbformelement'     => View\Helper\FormElement::class,
+            'ztbformrenderer'    => View\Helper\Form::class,
+            'ztbicon'            => Helper\Icon::class,
+            'ztbimage'           => Helper\Image::class,
+            'ztbpanel'           => Helper\Panel::class,
+            'ztblabel'           => Helper\Label::class,
+            'ztbwell'            => Helper\Well::class,
         ],
     ],
 ];
