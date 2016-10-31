@@ -44,9 +44,12 @@ class Navigation extends ZendNavigation
     {
         $pm = parent::getPluginManager();
         foreach ($this->defaultPluginManagerHelpers as $name => $invokableClass) {
+            $pm->setAllowOverride(true);
             $pm->setInvokableClass($name, $invokableClass);
         }
 
         return $pm;
     }
+
+
 }

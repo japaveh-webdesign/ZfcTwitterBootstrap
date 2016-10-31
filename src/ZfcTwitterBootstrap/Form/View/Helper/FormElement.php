@@ -5,6 +5,7 @@
 
 namespace ZfcTwitterBootstrap\Form\View\Helper;
 
+use Interop\Container\ContainerInterface;
 use Zend\Form\ElementInterface;
 use Zend\Form\View\Helper\FormElement as ZendFormElement;
 use Zend\Form\View\Helper\FormElementErrors;
@@ -40,6 +41,10 @@ class FormElement extends ZendFormElement
      * @var FormDescription
      */
     protected $descriptionHelper;
+    /**
+     * @var ContainerInterface
+     */
+    protected $serviceLocator;
 
     /**
      * @var string
@@ -206,7 +211,7 @@ class FormElement extends ZendFormElement
      */
     public function setGroupWrapper($groupWrapper)
     {
-        $this->groupWrapper = (string) $groupWrapper;
+        $this->groupWrapper = (string)$groupWrapper;
 
         return $this;
     }
@@ -230,7 +235,7 @@ class FormElement extends ZendFormElement
      */
     public function setControlWrapper($controlWrapper)
     {
-        $this->controlWrapper = (string) $controlWrapper;
+        $this->controlWrapper = (string)$controlWrapper;
 
         return $this;
     }
@@ -249,8 +254,8 @@ class FormElement extends ZendFormElement
      * Render
      *
      * @param  \Zend\Form\ElementInterface $element
-     * @param  string $groupWrapper
-     * @param  string $controlWrapper
+     * @param  string                      $groupWrapper
+     * @param  string                      $controlWrapper
      *
      * @return string
      */
@@ -342,16 +347,20 @@ class FormElement extends ZendFormElement
             $controls = str_replace(
                 ['<label', '</label>'],
                 ['<div class="radio"><label', '</label></div>'],
-                $controls);
+                $controls
+            );
         } elseif ($element instanceof \Zend\Form\Element\MultiCheckbox) {
             $controls = str_replace(
                 ['<label', '</label>'],
                 ['<div class="checkbox"><label', '</label></div>'],
-                $controls);
+                $controls
+            );
         }
 
 
-        if ($element instanceof \Zend\Form\Element\Hidden || $element instanceof \Zend\Form\Element\Submit || $element instanceof \Zend\Form\Element\Button) {
+        if ($element instanceof \Zend\Form\Element\Hidden || $element instanceof \Zend\Form\Element\Submit
+            || $element instanceof \Zend\Form\Element\Button
+        ) {
             return $controls . $elementErrorHelper->render($element);
         } else {
             $html = $hiddenElementForCheckbox . $controlLabel . sprintf(
@@ -376,8 +385,8 @@ class FormElement extends ZendFormElement
      * Magical Invoke
      *
      * @param  \Zend\Form\ElementInterface $element
-     * @param  string $groupWrapper
-     * @param  string $controlWrapper
+     * @param  string                      $groupWrapper
+     * @param  string                      $controlWrapper
      *
      * @return string|self
      */
@@ -386,6 +395,26 @@ class FormElement extends ZendFormElement
         if ($element) {
             return $this->render($element, $groupWrapper, $controlWrapper);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public function getServiceLocator(): ContainerInterface
+    {
+        return $this->serviceLocator;
+    }
+
+    /**
+     * @param ContainerInterface $serviceLocator
+     *
+     * @return FormElement
+     */
+    public function setServiceLocator(ContainerInterface $serviceLocator): FormElement
+    {
+        $this->serviceLocator = $serviceLocator;
 
         return $this;
     }
