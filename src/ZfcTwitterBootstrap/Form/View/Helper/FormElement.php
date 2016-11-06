@@ -402,7 +402,7 @@ class FormElement extends ZendFormElement
     /**
      * @return ContainerInterface
      */
-    public function getServiceLocator(): ContainerInterface
+    public function getServiceLocator()
     {
         return $this->serviceLocator;
     }
@@ -412,7 +412,7 @@ class FormElement extends ZendFormElement
      *
      * @return FormElement
      */
-    public function setServiceLocator(ContainerInterface $serviceLocator): FormElement
+    public function setServiceLocator(ContainerInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
 
