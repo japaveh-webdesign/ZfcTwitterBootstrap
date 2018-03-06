@@ -180,7 +180,7 @@ class FormElement extends ZendFormElement
      *
      * @return self
      */
-    public function setDescriptionHelper(FormDescription $descriptionHelper)
+    public function setDescriptionHelper($descriptionHelper)
     {
         $descriptionHelper->setView($this->getView());
         $this->descriptionHelper = $descriptionHelper;

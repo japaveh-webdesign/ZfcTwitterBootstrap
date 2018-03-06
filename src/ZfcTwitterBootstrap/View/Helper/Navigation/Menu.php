@@ -151,6 +151,7 @@ class Menu extends ZendMenu
 
                 $depth = $iterator->getDepth();
                 $isActive = $page->isActive(true);
+
                 if ($depth < $minDepth || !$this->accept($page)) {
                     // page is below minDepth or not accepted by acl/visibility
                     continue;
