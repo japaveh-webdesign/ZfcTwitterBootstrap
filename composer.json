@@ -1,6 +1,6 @@
 {
   "name": "jield-webdev/zfc-twitter-bootstrap",
-  "description": "A module that assists in implementing Twitter Bootstrap for ZF2",
+  "description": "A module that assists in implementing Twitter Bootstrap for ZF3",
   "type": "library",
   "keywords": [
     "zf2",
@@ -19,7 +19,7 @@
     "php": "^7.1"
   },
   "require-dev": {
-    "zendframework/zendframework": "~3",
+    "zendframework/zendframework": "~3"
   },
   "autoload": {
     "psr-0": {
